@@ -1,0 +1,28 @@
+import os
+from sklearn.datasets import load_iris
+
+
+iris_dataset = load_iris()
+
+filename = input("Введите имя для сохранения файла \n")
+if filename[-3:0] != "csv":
+    filename += ".csv"
+filedesc = open(filename, "w")
+
+header = ""
+for i in iris_dataset['feature_names']:
+    header += i + ";"
+    header += "Target"
+
+filedesc.write(header + "\n")
+
+for i in range(len(iris_dataset['data'])):
+    line = ""
+    for j in iris_dataset['data'][i]:
+        line += str(j).replace(".",";") + ";"
+    line += str (iris_dataset['target'][i])
+    filedesc.write(line + "\n")
+
+filedesc.close()
+
+os.startfile(filename)
