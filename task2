@@ -1,0 +1,96 @@
+import os
+from sklearn.datasets import load_iris
+
+
+class iris:
+    def __init__(self, **info):
+        if "data" in info and "target" in info:
+            self.sepal_length = info["data"][0]
+            self.sepal_width = info["data"][1]
+            self.petal_length = info["data"][2]
+            self.petal_width = info["data"][3]
+            self.target = info["target"]
+        elif "data_and_target" in info:
+            self.sepal_length = float(info["data_and_target"][0])
+            self.sepal_width = float(info["data_and_target"][1])
+            self.petal_length = float(info["data_and_target"][2])
+            self.petal_width = float(info["data_and_target"][3])
+            self.target = int(info["data_and_target"][4])
+
+
+iris_list = []
+
+filename = input("Введите имя файла \n")
+if filename == '0':
+    iris_datasets = load_iris()
+
+    for i in range(len(iris_datasets['data'])):
+        iris_list.append(
+            iris(data=iris_datasets['data'],
+            target=iris_datasets['data'][i]))
+else:
+    if filename[-3:0] != "csv":
+        filename += ".csv"
+    filedesc = open(filename, "r")
+    filecontent = filedesc.readlines()
+
+    for i in range(len(filecontent)):
+        if i > 0:
+            cells = filecontent[i].split(";")
+            iris_list.append(iris(data_and_target=cells))
+
+    filedesc.close()
+
+field_num = int(input("-----------------------меню--------------------------------\n" +
+                      "Что вы хотите сделать:\n" +
+                      " 0 - не фильтровать\n"
+                      " 1 - sepal_length\n" +
+                      " 2 - sepal_width\n" +
+                      " 3 - petal_length\n" +
+                      " 4 - petal_width\n" +
+                      " 5 - target\n" +
+                      "------------------------------------------------------------"))
+
+filtered_list = []
+if field_num == 0:
+    filtered_list = iris_list.copy()
+else:
+    min_num = float(input("введите мин допустимое значение"))
+    max_num = float(input("введите макс допустимое значение"))
+
+    if field_num == 1:
+        for i in iris_list:
+            if min_num <= i.sepal_length <= max_num:
+                filtered_list.append(i)
+    elif field_num == 2:
+        for i in iris_list:
+            if min_num <= i.sepal_width <= max_num:
+                filtered_list.append(i)
+    elif field_num == 3:
+        for i in iris_list:
+            if min_num <= i.petal_length <= max_num:
+                filtered_list.append(i)
+    elif field_num == 4:
+        for i in iris_list:
+            if min_num <= i.petal_width <= max_num:
+                filtered_list.append(i)
+    elif field_num == 5:
+        for i in iris_list:
+            if min_num <= i.target <= max_num:
+                filtered_list.append(i)
+
+filename = input("Введите данные для сохранения данных \n")
+if filename[-3:0] != ".csv":
+    filename += ".csv"
+filedesc = open(filename, "w")
+
+header = "sepal length(cm); sepal width " +\
+         "petal length; petal width "
+filedesc.write(header + "\n")
+for i in filtered_list:
+    line = str(i.sepal_length) + ";" + str(i.sepal_width) +\
+        ";" + str(i.petal_length) + ";" + str(i.petal_width) +\
+        ";" + str(i.target)
+    filedesc.write(line.replace(",", ".") + "\n")
+filedesc.close()
+os.startfile(filename)
