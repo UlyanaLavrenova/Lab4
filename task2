@@ -26,7 +26,7 @@ if filename == '0':
 
     for i in range(len(iris_datasets['data'])):
         iris_list.append(
-            iris(data=iris_datasets['data'],
+            iris(data=iris_datasets['data'][i],
             target=iris_datasets['data'][i]))
 else:
     if filename[-3:0] != "csv":
@@ -84,13 +84,13 @@ if filename[-3:0] != ".csv":
     filename += ".csv"
 filedesc = open(filename, "w")
 
-header = "sepal length(cm); sepal width " +\
-         "petal length; petal width "
+header = "sepal length(cm), sepal width, " +\
+         "petal length, petal width, target "
 filedesc.write(header + "\n")
 for i in filtered_list:
     line = str(i.sepal_length) + ";" + str(i.sepal_width) +\
         ";" + str(i.petal_length) + ";" + str(i.petal_width) +\
         ";" + str(i.target)
-    filedesc.write(line.replace(",", ".") + "\n")
+    filedesc.write(line.replace(".", ",") + "\n")
 filedesc.close()
 os.startfile(filename)
